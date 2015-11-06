@@ -1,0 +1,63 @@
+﻿2015/10/15 16:06:10 にビルドを開始しました。
+     1>ノード 2 上のプロジェクト "C:\Users\修\Desktop\Stitching\MM2015_StitchingTeam\MM2015_StitchingTeam\MM2015_StitchingTeam.vcxproj" (Build ターゲット)。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Ammae\opencv-2.4.11\build\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yc"stdafx.h" /Fp"Debug\MM2015_StitchingTeam.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt stdafx.cpp
+         stdafx.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Ammae\opencv-2.4.11\build\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\MM2015_StitchingTeam.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt MM2015_StitchingTeam.cpp
+         MM2015_StitchingTeam.cpp
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(48): warning C4627: '#include "opencv2/core/core.hpp"': プリコンパイル済みヘッダーの使用を検索中にスキップされました
+                 ディレクティブを 'stdafx.h' に追加するか、プリコンパイル済みヘッダーをリビルドします
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(49): warning C4627: '#include "opencv2/highgui/highgui.hpp"': プリコンパイル済みヘッダーの使用を検索中にスキップされました
+                 ディレクティブを 'stdafx.h' に追加するか、プリコンパイル済みヘッダーをリビルドします
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(50): warning C4627: '#include "opencv2/features2d/features2d.hpp"': プリコンパイル済みヘッダーの使用を検索中にスキップされました
+                 ディレクティブを 'stdafx.h' に追加するか、プリコンパイル済みヘッダーをリビルドします
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(51): warning C4627: '#include "opencv2/legacy/legacy.hpp"': プリコンパイル済みヘッダーの使用を検索中にスキップされました
+                 ディレクティブを 'stdafx.h' に追加するか、プリコンパイル済みヘッダーをリビルドします
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(52): warning C4627: '#include "opencv2/opencv.hpp"': プリコンパイル済みヘッダーの使用を検索中にスキップされました
+                 ディレクティブを 'stdafx.h' に追加するか、プリコンパイル済みヘッダーをリビルドします
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(53): warning C4627: '#include "opencv2/nonfree/nonfree.hpp"': プリコンパイル済みヘッダーの使用を検索中にスキップされました
+                 ディレクティブを 'stdafx.h' に追加するか、プリコンパイル済みヘッダーをリビルドします
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(58): error C2653: 'cv' : 識別子がクラス名でも名前空間名でもありません。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(58): error C2873: 'imread' : シンボルを using 宣言の中で使用することはできません。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(59): error C2653: 'cv' : 識別子がクラス名でも名前空間名でもありません。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(59): error C2873: 'Mat' : シンボルを using 宣言の中で使用することはできません。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(61): error C2653: 'cv' : 識別子がクラス名でも名前空間名でもありません。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(61): error C2873: 'imshow' : シンボルを using 宣言の中で使用することはできません。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(62): error C2653: 'cv' : 識別子がクラス名でも名前空間名でもありません。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(62): error C2873: 'waitKey' : シンボルを using 宣言の中で使用することはできません。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(63): error C2653: 'cv' : 識別子がクラス名でも名前空間名でもありません。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(63): error C2873: 'Size' : シンボルを using 宣言の中で使用することはできません。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(64): error C2653: 'cv' : 識別子がクラス名でも名前空間名でもありません。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(64): error C2873: 'Vec3b' : シンボルを using 宣言の中で使用することはできません。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(65): error C2653: 'cv' : 識別子がクラス名でも名前空間名でもありません。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(65): error C2873: 'imwrite' : シンボルを using 宣言の中で使用することはできません。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(68): error C2146: 構文エラー : ';' が、識別子 'stitching2Pic' の前に必要です。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(68): error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(68): error C2065: 'BasePic' : 定義されていない識別子です。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(68): error C2065: 'AddPic' : 定義されていない識別子です。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(68): error C2062: 型 'int' は不要です。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(69): error C2143: 構文エラー : ';' が '{' の前にありません。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(69): error C2447: '{' : 対応する関数ヘッダーがありません (旧形式の仮引数リスト?)
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(131): error C2146: 構文エラー : ';' が、識別子 'src' の前に必要です。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(131): error C2065: 'src' : 定義されていない識別子です。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(132): error C2146: 構文エラー : ';' が、識別子 'tempresult' の前に必要です。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(132): error C2065: 'tempresult' : 定義されていない識別子です。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(133): error C2146: 構文エラー : ';' が、識別子 'result' の前に必要です。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(133): error C2065: 'result' : 定義されていない識別子です。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(137): error C2065: 'src' : 定義されていない識別子です。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(137): error C2039: 'to_string' : 'std' のメンバーではありません。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(137): error C3861: 'imread': 識別子が見つかりませんでした
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(137): error C3861: 'to_string': 識別子が見つかりませんでした
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(140): error C2065: 'tempresult' : 定義されていない識別子です。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(140): error C2065: 'src' : 定義されていない識別子です。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(144): error C2065: 'tempresult' : 定義されていない識別子です。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(144): error C2065: 'src' : 定義されていない識別子です。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(144): error C3861: 'stitching2Pic': 識別子が見つかりませんでした
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(147): error C2065: 'result' : 定義されていない識別子です。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(147): error C2065: 'tempresult' : 定義されていない識別子です。
+     1>c:\users\修\desktop\stitching\mm2015_stitchingteam\mm2015_stitchingteam\mm2015_stitchingteam.cpp(149): error C3861: 'waitKey': 識別子が見つかりませんでした
+     1>プロジェクト "C:\Users\修\Desktop\Stitching\MM2015_StitchingTeam\MM2015_StitchingTeam\MM2015_StitchingTeam.vcxproj" (Build ターゲット) のビルドが終了しました -- 失敗。
+
+ビルドに失敗しました。
+
+経過時間 00:00:03.13

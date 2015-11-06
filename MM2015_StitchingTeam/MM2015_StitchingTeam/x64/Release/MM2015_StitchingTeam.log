@@ -1,0 +1,41 @@
+﻿2015/11/06 15:22:20 にビルドを開始しました。
+     1>ノード 2 上のプロジェクト "C:\Users\修\Desktop\Stitching\MM2015_StitchingTeam\MM2015_StitchingTeam\MM2015_StitchingTeam.vcxproj" (Build ターゲット)。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I"C:\Users\Ammae\eigen-eigen-c58038c56923" /I"C:\Users\Ammae\opencv-2.4.11\build\include" /Zi /nologo /W3 /WX- /sdl /O2 /Oi /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"x64\Release\MM2015_StitchingTeam.pch" /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /Gd /TP /errorReport:prompt MM2015_StitchingTeam.cpp
+         MM2015_StitchingTeam.cpp
+     1>MM2015_StitchingTeam.cpp(81): warning C4129: 'S' : エスケープ シーケンスとして正しく認識されませんでした。
+     1>MM2015_StitchingTeam.cpp(103): warning C4244: 'return' : 'double' から 'int' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(110): warning C4244: 'return' : 'double' から 'int' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(211): warning C4244: '初期化中' : 'double' から 'int' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(213): warning C4244: '初期化中' : 'double' から 'int' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(509): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(510): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(511): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(512): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(669): warning C4244: '引数' : 'double' から 'int' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(685): warning C4244: '初期化中' : 'double' から 'int' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(686): warning C4244: '初期化中' : 'double' から 'int' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(1135): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+     1>MM2015_StitchingTeam.cpp(1136): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+     1>MM2015_StitchingTeam.cpp(1249): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+     1>MM2015_StitchingTeam.cpp(1318): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+     1>MM2015_StitchingTeam.cpp(1376): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+     1>MM2015_StitchingTeam.cpp(1495): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+     1>MM2015_StitchingTeam.cpp(1496): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+     1>MM2015_StitchingTeam.cpp(1497): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+     1>MM2015_StitchingTeam.cpp(1534): warning C4267: '=' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+     1>MM2015_StitchingTeam.cpp(1625): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(1627): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(1628): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(1630): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\修\Desktop\Stitching\MM2015_StitchingTeam\x64\Release\MM2015_StitchingTeam.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\Ammae\opencv-2.4.11\build\x64\vc12\lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\修\Desktop\Stitching\MM2015_StitchingTeam\x64\Release\MM2015_StitchingTeam.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\修\Desktop\Stitching\MM2015_StitchingTeam\x64\Release\MM2015_StitchingTeam.lib" /MACHINE:X64 x64\Release\MM2015_StitchingTeam.obj
+         x64\Release\stdafx.obj
+         コード生成しています。
+         コード生成が終了しました。
+         MM2015_StitchingTeam.vcxproj -> C:\Users\修\Desktop\Stitching\MM2015_StitchingTeam\x64\Release\MM2015_StitchingTeam.exe
+     1>プロジェクト "C:\Users\修\Desktop\Stitching\MM2015_StitchingTeam\MM2015_StitchingTeam\MM2015_StitchingTeam.vcxproj" (Build ターゲット) のビルドが完了しました。
+
+ビルドに成功しました。
+
+経過時間 00:00:13.25

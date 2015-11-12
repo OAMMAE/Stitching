@@ -15,6 +15,15 @@
 #include <Eigen/SVD>
 #include <Eigen/Dense>
 
+#include <limits>
+
+#define _SCL_SECURE_NO_WARNINGS
+
+#define _SECURE_SCL 0
+
+
+//#include "L1_residual_min.h"
+
 //.lib ファイルの指定
 #ifdef _DEBUG
 #pragma comment(lib,"opencv_calib3d2411d.lib")
@@ -74,11 +83,13 @@ using cv::imwrite;
 typedef vector<vector<Point2f>> matKey;
 typedef vector<vector<int>> Index;
 typedef Eigen::Triplet<double> T;
+typedef Eigen::DiagonalMatrix<double, Eigen::Dynamic> DMat;	// Diagonal matrix
+typedef Eigen::SparseMatrix<double> SpMat;	// Sparse matrix
 
 /*初期設定*/
-const int count = 2;
-const int dodo = 0;  //0ならransac 1なら普通のやつ 3ならhomoの平均 2ならhomo計算の実装 7はhomographyの計算テスト 6もhomoテストだが500点
-std::string HomeDir = "D:\Stitching/datadebug/";
+const int count = 6;
+const int dodo = 5;  //0ならransac 1なら普通のやつ 3ならhomoの平均 2ならhomo計算の実装 7はhomographyの計算テスト 6もhomoテストだが500点
+std::string HomeDir = "D:\Stitching/datadebug3/";
 const double p = 1.3; //画像の拡大量
 
 /*関数プロトタイプ宣言*/
@@ -95,6 +106,11 @@ Mat stitching2Pic(Mat &BasePic1, Mat &AddPic1, int k);
 Mat calcHomo(Mat &BasePic, Mat &AddPic, int num);
 Mat calcHomo2(Mat &BasePic, Mat &AddPic, int num);
 void makePanorama1();
+
+Mat FindHomographyWithLS_CVDense(matKey Point);
+//double L1_residual_min_sp(const SpMat &A, const Vec &b, Vec &x, const int MAX_ITER = 1000, const double tol = 1.0e-8);
+//Mat L1_residual_min_sp(matKey Point, const int MAX_ITER = 1000, const double tol = 1.0e-8);
+
 
 //点(x,y)がホモグラフィ行列homoによって変換されるx座標を返す
 int calchomo_y(Mat homo, int x, int y)
@@ -423,6 +439,8 @@ Mat matching2(Mat input1, Mat input2, int k)
 	//(4)ホモグラフィの計算結果からinput2を変形し、ベース画像に貼り付け///
 	//////////////////////////////////////////////////////////////////////
 
+	std::cout << "Homo" << std::to_string(k) << std::endl << homo << std::endl << std::endl;
+
 	result = input1;
 
 	result = homography(homo, input2, result, k);
@@ -495,10 +513,15 @@ matKey FindKeyPoint(Mat input1, Mat input2)
 	// calculate inliner
 	vector<Point2f> Inlier1;
 	vector<Point2f> Inlier2;
-	//vector<DMatch> Inliermatches;
+
+	//for debug
+	vector<DMatch> Inliermatches;
 
 	int InlinerCount = ptCount - OutlinerCount;
-	//Inliermatches.resize(InlinerCount);
+
+	//for debug
+	Inliermatches.resize(InlinerCount);
+
 	Inlier1.resize(InlinerCount);
 	Inlier2.resize(InlinerCount);
 	InlinerCount = 0;
@@ -510,20 +533,31 @@ matKey FindKeyPoint(Mat input1, Mat input2)
 			Inlier1[InlinerCount].y = (int)p1.at<float>(i, 1);
 			Inlier2[InlinerCount].x = (int)p2.at<float>(i, 0);
 			Inlier2[InlinerCount].y = (int)p2.at<float>(i, 1);
-			//Inliermatches[InlinerCount].queryIdx = InlinerCount;
-			//Inliermatches[InlinerCount].trainIdx = InlinerCount;
+
+			//for debug
+			Inliermatches[InlinerCount].queryIdx = InlinerCount;
+			Inliermatches[InlinerCount].trainIdx = InlinerCount;
+
 			InlinerCount++;
 		}
 	}
 
 
-	//vector<KeyPoint> key1(InlinerCount);
-	//vector<KeyPoint> key2(InlinerCount);
-	//KeyPoint::convert(Inlier1, key1);
-	//KeyPoint::convert(Inlier2, key2);
+
 
 	result.push_back(Inlier1);
 	result.push_back(Inlier2);
+
+	//output
+	vector<KeyPoint> key1(InlinerCount);
+	vector<KeyPoint> key2(InlinerCount);
+	KeyPoint::convert(Inlier1, key1);
+	KeyPoint::convert(Inlier2, key2);
+	Mat img_matches;
+	drawMatches(input1, key1, input2, key2, Inliermatches, img_matches);
+
+	imwrite(HomeDir + "/findkey.jpg", img_matches);
+
 
 	return result;
 }
@@ -1140,25 +1174,6 @@ Mat FindHomographyWithSVD_EigenSparse(matKey Point)
 	Eigen::SparseMatrix<int> A(2 * num, 9 * n);
 	std::vector<T> v;
 
-	//for (int i = 0; i < num; i++)
-	//{
-	//	v.push_back(T(2 * i, 3, Point[1][i].x));
-	//	v.push_back(T(2 * i, 4, Point[1][i].y));
-	//	v.push_back(T(2 * i, 5, 1));
-
-	//	v.push_back(T(2 * i + 1, 0, Point[1][i].x));
-	//	v.push_back(T(2 * i + 1, 1, Point[1][i].y));
-	//	v.push_back(T(2 * i + 1, 2, 1));
-
-	//	v.push_back(T(2 * i, 6, 0 - Point[0][i].y * Point[1][i].x));
-	//	v.push_back(T(2 * i, 7, 0 - Point[0][i].y * Point[1][i].y));
-	//	v.push_back(T(2 * i, 8, 0 - Point[0][i].y));
-
-	//	v.push_back(T(2 * i + 1, 6, 0 - Point[0][i].x * Point[1][i].x));
-	//	v.push_back(T(2 * i + 1, 7, 0 - Point[0][i].x * Point[1][i].y));
-	//	v.push_back(T(2 * i + 1, 8, 0 - Point[0][i].x));
-	//}
-
 	for (int i = 0; i < num; i++)
 	{
 		for (int j = 0; j < n; j++)
@@ -1443,6 +1458,696 @@ Mat FindHomographyWithLS_CVDense(matKey Point)
 
 }
 
+//OpenCVのDenseMatを用いてLeast-SquareによってPoint[1]からPoint[0]へのホモグラフィ行列を計算し返す
+Mat FindHomographyWithLS_CVDense2(matKey Point)
+{
+	int num = Point[0].size();
+	Mat A = (cv::Mat_<double>(3 * num, 8));
+	Mat B = (cv::Mat_<double>(3 * num, 1));
+
+	for (int i = 0; i < num; i++)
+	{
+		A.at<double>(3 * i, 0) = Point[1][i].x;
+		A.at<double>(3 * i, 1) = Point[1][i].y;
+		A.at<double>(3 * i, 2) = 1;
+		A.at<double>(3 * i, 3) = 0;
+		A.at<double>(3 * i, 4) = 0;
+		A.at<double>(3 * i, 5) = 0;
+		A.at<double>(3 * i, 6) = 0;
+		A.at<double>(3 * i, 7) = 0;
+
+		A.at<double>(3 * i + 1, 0) = 0;
+		A.at<double>(3 * i + 1, 1) = 0;
+		A.at<double>(3 * i + 1, 2) = 0;
+		A.at<double>(3 * i + 1, 3) = Point[1][i].x;
+		A.at<double>(3 * i + 1, 4) = Point[1][i].y;
+		A.at<double>(3 * i + 1, 5) = 1;
+		A.at<double>(3 * i + 1, 6) = 0;
+		A.at<double>(3 * i + 1, 7) = 0;
+
+		A.at<double>(3 * i + 2, 0) = 0;
+		A.at<double>(3 * i + 2, 1) = 0;
+		A.at<double>(3 * i + 2, 2) = 0;
+		A.at<double>(3 * i + 2, 3) = 0;
+		A.at<double>(3 * i + 2, 4) = 0;
+		A.at<double>(3 * i + 2, 5) = 0;
+		A.at<double>(3 * i + 2, 6) = Point[1][i].x;
+		A.at<double>(3 * i + 2, 7) = Point[1][i].y;
+
+		B.at<double>(3 * i, 0) = Point[0][i].x;
+		B.at<double>(3 * i + 1, 0) = Point[0][i].y;
+		B.at<double>(3 * i + 2, 0) = 1;
+	}
+
+	Mat Homotemp;
+	cv::solve(A, B, Homotemp, cv::DECOMP_SVD);
+
+	//std::cout << std::endl << "FindHomographyWithLS_CVDense:" << std::endl << A << std::endl;
+	//std::cout << std::endl << "FindHomographyWithLS_CVDense:" << std::endl << B << std::endl;
+
+
+	//std::cout << std::endl << "FindHomographyWithLS_CVDense:" << std::endl << Homotemp << std::endl;
+
+
+	Mat Homo = (cv::Mat_<double>(3, 3));
+
+	Homo.at<double>(0, 0) = Homotemp.at<double>(0, 0);
+	Homo.at<double>(0, 1) = Homotemp.at<double>(1, 0);
+	Homo.at<double>(0, 2) = Homotemp.at<double>(2, 0);
+	Homo.at<double>(1, 0) = Homotemp.at<double>(3, 0);
+	Homo.at<double>(1, 1) = Homotemp.at<double>(4, 0);
+	Homo.at<double>(1, 2) = Homotemp.at<double>(5, 0);
+	Homo.at<double>(2, 0) = Homotemp.at<double>(6, 0);
+	Homo.at<double>(2, 1) = Homotemp.at<double>(7, 0);
+	Homo.at<double>(2, 2) = 1.0;
+
+
+	std::cout << std::endl << "FindHomographyWithLS_CVDense2:" << std::endl << Homo << std::endl;
+
+	return Homo;
+
+}
+
+//Mat L1_residual_min_sp(matKey Point, const int MAX_ITER = 50000, const double tol = 1.0e-20)
+//{
+//	const double eps = 1.0e-8;	// A constant small number (used for avoiding zero-division)
+//	double residual = std::numeric_limits<double>::infinity(); // Set the initial value for the residual to be infinity
+//
+//
+//	int num = Point[0].size();  //Matching の個数
+//	int numPic = Point.size();  //画像数
+//	int numhomo = numPic * (numPic - 1) / 2;  //ホモグラフィ行列の個数
+//
+//	//Eigen を利用して特異値分解を行う
+//	Eigen::SparseMatrix<double> A(3 * num, 9 * numhomo);
+//	Eigen::VectorXd b(3 * num);
+//	Eigen::VectorXd x;
+//
+//	Mat Homo;
+//
+//	std::vector<T> v;
+//
+//	for (int i = 0; i < num; i++)
+//	{
+//		for (int j = 0; j < numhomo; j++)
+//		{
+//			v.push_back(T(3 * i, 0 + 9 * j, Point[(j + 1) % 3][i].x));
+//			v.push_back(T(3 * i, 1 + 9 * j, Point[(j + 1) % 3][i].y));
+//			v.push_back(T(3 * i, 2 + 9 * j, 1));
+//
+//			v.push_back(T(3 * i + 1, 3 + 9 * j, Point[(j + 1) % 3][i].x));
+//			v.push_back(T(3 * i + 1, 4 + 9 * j, Point[(j + 1) % 3][i].y));
+//			v.push_back(T(3 * i + 1, 5 + 9 * j, 1));
+//
+//			v.push_back(T(3 * i + 2, 6 + 9 * j, Point[(j + 1) % 3][i].x));
+//			v.push_back(T(3 * i + 2, 7 + 9 * j, Point[(j + 1) % 3][i].y));
+//			v.push_back(T(3 * i + 2, 8 + 9 * j, 1));
+//
+//			b(3 * i) = Point[j][i].x;
+//			b(3 * i + 1) = Point[j][i].y;
+//			b(3 * i + 2) = 1;
+//		}
+//	}
+//
+//	A.setFromTriplets(v.begin(), v.end());
+//
+//	//std::cout << std::endl << "L1_residual_min_sp" << std::endl << A << std::endl;
+//	//std::cout << std::endl << "L1_residual_min_sp" << std::endl << b << std::endl;
+//
+//	const int m = A.rows();		// # of rows of Matrix A 
+//	const int n = A.cols();		// # of cols of Matrix A
+//	if (m != b.size())	// m should agree with the size of Vector b (otherwise, throw an exception)
+//		throw std::invalid_argument("Exception: Inconsistent dimensionality");
+//
+//	DMat W(m);			// Prepare an (m x m) diagonal weight matrix
+//	W.setIdentity();	// Initialize the diagonal matrix as identity
+//
+//	Eigen::VectorXd xold = 1000.0 * Eigen::VectorXd::Ones(n);	// Buffer for storing previous solution x
+//	for (int k = 0; k < MAX_ITER; ++k) // Start iteration of IRLS
+//	{
+//		// Create a normal equation Cx = d
+//		SpMat C = W * A;
+//		Eigen::VectorXd d = W * b;
+//		// Solve WAx = Wb for x
+//		Eigen::SparseQR<Eigen::SparseMatrix<double>, Eigen::COLAMDOrdering<int>> solver;
+//		solver.compute(C);
+//		x = solver.solve(d);
+//		// Check convergence
+//		if ((x - xold).norm() < tol)
+//		{
+//			vector<vector<double>> homolist;
+//
+//			for (int i = 0; i < numhomo; i++)
+//			{
+//				vector<double> homo;
+//				for (int j = 0; j < 9; j++)
+//				{
+//					homo.push_back(x(j + 9 * i) / x(8 + 9 * i));
+//				}
+//				homolist.push_back(homo);
+//			}
+//
+//			vector<Mat> Homolist;
+//
+//			for (int i = 0; i < numhomo; i++)
+//			{
+//				Mat Homo = (cv::Mat_<double>(3, 3) <<
+//					homolist.at(i).at(0), homolist.at(i).at(1), homolist.at(i).at(2),
+//					homolist.at(i).at(3), homolist.at(i).at(4), homolist.at(i).at(5),
+//					homolist.at(i).at(6), homolist.at(i).at(7), homolist.at(i).at(8));
+//
+//				Homolist.push_back(Homo);
+//				std::cout << std::endl << "L1_residual_min_sp" << std::endl << Homo << std::endl;
+//			}
+//
+//			Homo = Homolist.at(0);
+//			std::cout << std::endl << "L1_residual_min_sp" << std::endl << Homo << std::endl;
+//
+//			std::cout << std::endl << "kkk" << std::endl << k << std::endl;
+//
+//			return Homo;
+//		}
+//		// Update weight matrix W
+//		Eigen::VectorXd e = b - A * x;
+//		// Update xold
+//		xold = x;
+//		residual = e.lpNorm<1>();
+//		for (int i = 0; i < m; ++i)
+//		{
+//			W.diagonal()[i] = 1.0 / max(sqrt(fabs(e[i])), eps);	// W(i,i) = 1.0 / |e(i)|	(max with eps is used for avoiding zero-division in the case e(i) = 0.0)
+//		}
+//	}
+//
+//	vector<vector<double>> homolist;
+//
+//	for (int i = 0; i < numhomo; i++)
+//	{
+//		vector<double> homo;
+//		for (int j = 0; j < 9; j++)
+//		{
+//			homo.push_back(x(j + 9 * i) / x(8 + 9 * i));
+//		}
+//		homolist.push_back(homo);
+//	}
+//
+//	vector<Mat> Homolist;
+//
+//	for (int i = 0; i < numhomo; i++)
+//	{
+//		Mat Homo = (cv::Mat_<double>(3, 3) <<
+//			homolist.at(i).at(0), homolist.at(i).at(1), homolist.at(i).at(2),
+//			homolist.at(i).at(3), homolist.at(i).at(4), homolist.at(i).at(5),
+//			homolist.at(i).at(6), homolist.at(i).at(7), homolist.at(i).at(8));
+//
+//		Homolist.push_back(Homo);
+//		std::cout << std::endl << "L1_residual_min_sp" << std::endl << Homo << std::endl;
+//	}
+//
+//	Homo = Homolist.at(0);
+//	std::cout << std::endl << "L1_residual_min_sp" << std::endl << Homo << std::endl;
+//
+//
+//	return Homo;
+//}
+
+//Mat L1_residual_min_sp2(matKey Point, const int MAX_ITER = 50000, const double tol = 1.0e-20)
+//{
+//	const double eps = 1.0e-8;	// A constant small number (used for avoiding zero-division)
+//	double residual = std::numeric_limits<double>::infinity(); // Set the initial value for the residual to be infinity
+//
+//
+//	int num = Point[0].size();  //Matching の個数
+//	int numPic = Point.size();  //画像数
+//	int numhomo = numPic * (numPic - 1) / 2;  //ホモグラフィ行列の個数
+//
+//	//Eigen を利用して特異値分解を行う
+//	Eigen::SparseMatrix<double> A(2 * num, 9 * numhomo);
+//	Eigen::VectorXd b(2 * num);
+//	Eigen::VectorXd x;
+//
+//	Mat Homo;
+//
+//	std::vector<T> v;
+//
+//	for (int i = 0; i < num; i++)
+//	{
+//		for (int j = 0; j < numhomo; j++)
+//		{
+//			v.push_back(T(2 * i, 3 + 9 * j, Point[(j + 1) % 3][i].x));
+//			v.push_back(T(2 * i, 4 + 9 * j, Point[(j + 1) % 3][i].y));
+//			v.push_back(T(2 * i, 5 + 9 * j, 1));
+//
+//			v.push_back(T(2 * i + 1, 0 + 9 * j, Point[(j + 1) % 3][i].x));
+//			v.push_back(T(2 * i + 1, 1 + 9 * j, Point[(j + 1) % 3][i].y));
+//			v.push_back(T(2 * i + 1, 2 + 9 * j, 1));
+//
+//			v.push_back(T(2 * i, 6 + 9 * j, 0 - Point[j][i].y * Point[(j + 1) % 3][i].x));
+//			v.push_back(T(2 * i, 7 + 9 * j, 0 - Point[j][i].y * Point[(j + 1) % 3][i].y));
+//			v.push_back(T(2 * i, 8 + 9 * j, 0 - Point[j][i].y));
+//
+//			v.push_back(T(2 * i + 1, 6 + 9 * j, 0 - Point[j][i].x * Point[(j + 1) % 3][i].x));
+//			v.push_back(T(2 * i + 1, 7 + 9 * j, 0 - Point[j][i].x * Point[(j + 1) % 3][i].y));
+//			v.push_back(T(2 * i + 1, 8 + 9 * j, 0 - Point[j][i].x));
+//
+//			b(2 * i) = 0;
+//			b(2 * i + 1) = 0;
+//		}
+//	}
+//
+//	A.setFromTriplets(v.begin(), v.end());
+//
+//	//std::cout << std::endl << "L1_residual_min_sp" << std::endl << A << std::endl;
+//	//std::cout << std::endl << "L1_residual_min_sp" << std::endl << b << std::endl;
+//
+//	const int m = A.rows();		// # of rows of Matrix A 
+//	const int n = A.cols();		// # of cols of Matrix A
+//	if (m != b.size())	// m should agree with the size of Vector b (otherwise, throw an exception)
+//		throw std::invalid_argument("Exception: Inconsistent dimensionality");
+//
+//	DMat W(m);			// Prepare an (m x m) diagonal weight matrix
+//	W.setIdentity();	// Initialize the diagonal matrix as identity
+//
+//	Eigen::VectorXd xold = 1000.0 * Eigen::VectorXd::Ones(n);	// Buffer for storing previous solution x
+//	for (int k = 0; k < MAX_ITER; ++k) // Start iteration of IRLS
+//	{
+//		// Create a normal equation Cx = d
+//		SpMat C = W * A;
+//		Eigen::VectorXd d = W * b;
+//		// Solve WAx = Wb for x
+//		Eigen::SparseQR<Eigen::SparseMatrix<double>, Eigen::COLAMDOrdering<int>> solver;
+//		solver.compute(C);
+//		x = solver.solve(d);
+//		// Check convergence
+//		if ((x - xold).norm() < tol)
+//		{
+//			vector<vector<double>> homolist;
+//
+//			for (int i = 0; i < numhomo; i++)
+//			{
+//				vector<double> homo;
+//				for (int j = 0; j < 9; j++)
+//				{
+//					homo.push_back(x(j + 9 * i) / x(8 + 9 * i));
+//				}
+//				homolist.push_back(homo);
+//			}
+//
+//			vector<Mat> Homolist;
+//
+//			for (int i = 0; i < numhomo; i++)
+//			{
+//				Mat Homo = (cv::Mat_<double>(3, 3) <<
+//					homolist.at(i).at(0), homolist.at(i).at(1), homolist.at(i).at(2),
+//					homolist.at(i).at(3), homolist.at(i).at(4), homolist.at(i).at(5),
+//					homolist.at(i).at(6), homolist.at(i).at(7), homolist.at(i).at(8));
+//
+//				Homolist.push_back(Homo);
+//				std::cout << std::endl << "L1_residual_min_sp2" << std::endl << Homo << std::endl;
+//			}
+//
+//			Homo = Homolist.at(0);
+//			std::cout << std::endl << "L1_residual_min_sp2" << std::endl << Homo << std::endl;
+//
+//			std::cout << std::endl << "kkk" << std::endl << k << std::endl;
+//
+//			return Homo;
+//		}
+//		// Update weight matrix W
+//		Eigen::VectorXd e = b - A * x;
+//		// Update xold
+//		xold = x;
+//		residual = e.lpNorm<1>();
+//		for (int i = 0; i < m; ++i)
+//		{
+//			W.diagonal()[i] = 1.0 / max(sqrt(fabs(e[i])), eps);	// W(i,i) = 1.0 / |e(i)|	(max with eps is used for avoiding zero-division in the case e(i) = 0.0)
+//		}
+//	}
+//
+//	vector<vector<double>> homolist;
+//
+//	for (int i = 0; i < numhomo; i++)
+//	{
+//		vector<double> homo;
+//		for (int j = 0; j < 9; j++)
+//		{
+//			homo.push_back(x(j + 9 * i) / x(8 + 9 * i));
+//		}
+//		homolist.push_back(homo);
+//	}
+//
+//	vector<Mat> Homolist;
+//
+//	for (int i = 0; i < numhomo; i++)
+//	{
+//		Mat Homo = (cv::Mat_<double>(3, 3) <<
+//			homolist.at(i).at(0), homolist.at(i).at(1), homolist.at(i).at(2),
+//			homolist.at(i).at(3), homolist.at(i).at(4), homolist.at(i).at(5),
+//			homolist.at(i).at(6), homolist.at(i).at(7), homolist.at(i).at(8));
+//
+//		Homolist.push_back(Homo);
+//		std::cout << std::endl << "L1_residual_min_sp2" << std::endl << Homo << std::endl;
+//	}
+//
+//	Homo = Homolist.at(0);
+//	std::cout << std::endl << "L1_residual_min_sp2" << std::endl << Homo << std::endl;
+//
+//
+//	return Homo;
+//}
+
+Mat L1_residual_min_sp3(matKey Point, const int MAX_ITER = 10000, const double tol = 1.0e-20)
+{
+	const double eps = 1.0e-8;	// A constant small number (used for avoiding zero-division)
+	double residual = std::numeric_limits<double>::infinity(); // Set the initial value for the residual to be infinity
+
+
+	int num = Point[0].size();  //Matching の個数
+	int numPic = Point.size();  //画像数
+	int numhomo = numPic * (numPic - 1) / 2;  //ホモグラフィ行列の個数
+
+	//Eigen を利用して特異値分解を行う
+	Eigen::SparseMatrix<double> A(2 * num, 8 * numhomo);
+	Eigen::VectorXd b(2 * num);
+	Eigen::VectorXd x;
+
+	Mat Homo;
+
+	std::vector<T> v;
+
+	for (int i = 0; i < num; i++)
+	{
+		for (int j = 0; j < numhomo; j++)
+		{
+			v.push_back(T(2 * i, 3 + 8 * j, Point[(j + 1) % 3][i].x));
+			v.push_back(T(2 * i, 4 + 8 * j, Point[(j + 1) % 3][i].y));
+			v.push_back(T(2 * i, 5 + 8 * j, 1));
+
+			v.push_back(T(2 * i + 1, 0 + 8 * j, Point[(j + 1) % 3][i].x));
+			v.push_back(T(2 * i + 1, 1 + 8 * j, Point[(j + 1) % 3][i].y));
+			v.push_back(T(2 * i + 1, 2 + 8 * j, 1));
+
+			v.push_back(T(2 * i, 6 + 8 * j, 0 - Point[j][i].y * Point[(j + 1) % 3][i].x));
+			v.push_back(T(2 * i, 7 + 8 * j, 0 - Point[j][i].y * Point[(j + 1) % 3][i].y));
+
+			v.push_back(T(2 * i + 1, 6 + 8 * j, 0 - Point[j][i].x * Point[(j + 1) % 3][i].x));
+			v.push_back(T(2 * i + 1, 7 + 8 * j, 0 - Point[j][i].x * Point[(j + 1) % 3][i].y));
+
+			b(2 * i) = Point[j][i].y;
+			b(2 * i + 1) = Point[j][i].x;
+		}
+	}
+
+	A.setFromTriplets(v.begin(), v.end());
+
+	//std::cout << std::endl << "L1_residual_min_sp" << std::endl << A << std::endl;
+	//std::cout << std::endl << "L1_residual_min_sp" << std::endl << b << std::endl;
+
+	const int m = A.rows();		// # of rows of Matrix A 
+	const int n = A.cols();		// # of cols of Matrix A
+	if (m != b.size())	// m should agree with the size of Vector b (otherwise, throw an exception)
+		throw std::invalid_argument("Exception: Inconsistent dimensionality");
+
+	DMat W(m);			// Prepare an (m x m) diagonal weight matrix
+	W.setIdentity();	// Initialize the diagonal matrix as identity
+
+	Eigen::VectorXd xold = 1000.0 * Eigen::VectorXd::Ones(n);	// Buffer for storing previous solution x
+	for (int k = 0; k < MAX_ITER; ++k) // Start iteration of IRLS
+	{
+		// Create a normal equation Cx = d
+		SpMat C = W * A;
+		Eigen::VectorXd d = W * b;
+		// Solve WAx = Wb for x
+		Eigen::SparseQR<Eigen::SparseMatrix<double>, Eigen::COLAMDOrdering<int>> solver;
+		solver.compute(C);
+		x = solver.solve(d);
+		// Check convergence
+		if ((x - xold).norm() < tol)
+		{
+			vector<vector<double>> homolist;
+
+			for (int i = 0; i < numhomo; i++)
+			{
+				vector<double> homo;
+				for (int j = 0; j < 8; j++)
+				{
+					homo.push_back(x(j + 8 * i));
+				}
+				homo.push_back(1.0);
+				homolist.push_back(homo);
+			}
+
+			vector<Mat> Homolist;
+
+			for (int i = 0; i < numhomo; i++)
+			{
+				Mat Homo = (cv::Mat_<double>(3, 3) <<
+					homolist.at(i).at(0), homolist.at(i).at(1), homolist.at(i).at(2),
+					homolist.at(i).at(3), homolist.at(i).at(4), homolist.at(i).at(5),
+					homolist.at(i).at(6), homolist.at(i).at(7), homolist.at(i).at(8));
+
+				Homolist.push_back(Homo);
+				std::cout << std::endl << "L1_residual_min_sp3:" << std::to_string(i) << std::endl << Homo << std::endl;
+			}
+
+			Homo = Homolist.at(0);
+
+			std::cout << std::endl << "繰り返し回数:" << k << std::endl;
+
+			return Homo;
+		}
+		// Update weight matrix W
+		Eigen::VectorXd e = b - A * x;
+		// Update xold
+		xold = x;
+		residual = e.lpNorm<1>();
+		for (int i = 0; i < m; ++i)
+		{
+			W.diagonal()[i] = 1.0 / max(sqrt(fabs(e[i])), eps);	// W(i,i) = 1.0 / |e(i)|	(max with eps is used for avoiding zero-division in the case e(i) = 0.0)
+		}
+	}
+
+	vector<vector<double>> homolist;
+
+	for (int i = 0; i < numhomo; i++)
+	{
+		vector<double> homo;
+		for (int j = 0; j < 8; j++)
+		{
+			homo.push_back(x(j + 8 * i));
+		}
+		homo.push_back(1.0);
+		homolist.push_back(homo);
+	}
+
+	vector<Mat> Homolist;
+
+	for (int i = 0; i < numhomo; i++)
+	{
+		Mat Homo = (cv::Mat_<double>(3, 3) <<
+			homolist.at(i).at(0), homolist.at(i).at(1), homolist.at(i).at(2),
+			homolist.at(i).at(3), homolist.at(i).at(4), homolist.at(i).at(5),
+			homolist.at(i).at(6), homolist.at(i).at(7), homolist.at(i).at(8));
+
+		Homolist.push_back(Homo);
+		std::cout << std::endl << "L1_residual_min_sp3:" << std::to_string(i) << std::endl << Homo << std::endl;
+	}
+
+	Homo = Homolist.at(0);
+	std::cout << std::endl << "L1_residual_min_sp3:Homo0は" << std::endl << Homo << std::endl;
+
+
+	return Homo;
+}
+
+void example0()
+{
+	Mat src[count];
+	Mat tempresult;
+	Mat result;
+
+	for (int i = 0; i < count; i++)
+	{
+		src[i] = imread(HomeDir + std::to_string(i) + ".JPG");
+	}
+
+	tempresult = src[0];
+
+	for (int i = 1; i < count; i++)
+	{
+		tempresult = matching2(tempresult, src[i], i);
+		//tempresult = matching(tempresult, src[i], i);
+	}
+
+	result = tempresult;
+
+}
+
+void example1()
+{
+	Mat src[count];
+	Mat tempresult;
+	Mat result;
+
+	for (int i = 0; i < count; i++)
+	{
+		src[i] = imread(HomeDir + std::to_string(i) + ".JPG");
+	}
+
+	tempresult = src[0];
+
+	for (int i = 1; i < count; i++)
+	{
+		tempresult = stitching2Pic(tempresult, src[i], i);
+	}
+
+	result = tempresult;
+
+}
+
+void example2()
+{
+	Mat src[count];
+	Mat tempresult;
+	Mat result;
+
+	for (int i = 0; i < count; i++)
+	{
+		src[i] = imread(HomeDir + std::to_string(i) + ".JPG");
+	}
+
+	matKey a, b, c;
+
+	//for (int i = 1; i < count; i++)
+	//{
+	//	for (int j = 0; j < i; j++)
+	//	{
+	//		a = FindKeyPoint(src[i], src[j]);
+	//	}
+	//}
+	a = FindKeyPoint(src[0], src[1]);
+	//b = FindKeyPoint(src[1], src[2]);
+	//c = FindKeyPoint(src[2], src[0]);
+	//int asize = a[0].size();
+	//int bsize = b[0].size();
+	//int csize = c[0].size();
+	//vector<Point2f> tempmatch;
+	//tempmatch.resize(asize);
+
+	//int matchnum = 0;
+	//vector<int> matchindex;
+	//bool matching = false;
+
+	////0,1の結果に0,2の結果を追加した0,1,2を作る
+	//matchindex.resize(csize);
+	//for (int i = 0; i < asize; i++)
+	//{
+	//	for (int j = 0; j < csize; j++)
+	//	{
+	//		if (a[0][i] == c[1][j])
+	//		{
+	//			tempmatch[i] = c[0][j];
+	//			matchnum++;
+	//			matchindex[j] = 1;
+	//		}
+	//	}
+	//}
+	//std::cout << matchnum << std::endl;
+	//a.push_back(tempmatch);
+
+	//for (int i = 0; i < csize; i++)
+	//{
+	//	if (matchindex[i] == 0)
+	//	{
+	//		a[0].push_back(c[1][i]);
+	//		a[2].push_back(c[0][i]);
+	//	}
+	//}
+	//a[1].resize(a[0].size());
+
+
+	////1,2だけの結果を0,1,2に加える
+	//asize = a[0].size();
+	//matchindex.clear();
+	//matching = false;
+	//for (int i = 0; i < bsize; i++)
+	//{
+	//	for (int j = 0; j < asize; j++)
+	//	{
+	//		if (b[0][i] == a[1][j])
+	//		{
+	//			matching = true;
+	//		}
+	//	}
+	//	if (!matching)
+	//	{
+	//		matchindex.push_back(i);
+	//	}
+	//	matching = false;
+	//}
+	//a[0].resize(asize + matchindex.size());
+	//a[1].resize(asize + matchindex.size());
+	//a[2].resize(asize + matchindex.size());
+
+	//matchnum = 0;
+	//for (int i = asize; i < a[0].size(); i++)
+	//{
+	//	a[1][i] = b[0][matchindex[matchnum]];
+	//	a[2][i] = b[1][matchindex[matchnum]];
+	//	matchnum++;
+	//}
+
+	//Mat Homo = cv::findHomography(a[1], a[0], CV_RANSAC);
+	Mat Homo = FindHomographyWithSVD_EigenSparse(a);
+	//Mat Homo = L1_residual_min_sp3(a);
+
+	result = homography(Homo, src[1], src[0], 1);
+
+	waitKey();
+
+}
+
+void example3()
+{
+	Mat src[count];
+	Mat tempresult;
+	Mat result;
+
+	for (int i = 0; i < count; i++)
+	{
+		src[i] = imread(HomeDir + std::to_string(i) + ".JPG");
+	}
+
+}
+
+//L1で合成
+void example5()
+{
+	Mat src[count];
+	Mat tempresult;
+	Mat result;
+
+	for (int i = 0; i < count; i++)
+	{
+		src[i] = imread(HomeDir + std::to_string(i) + ".JPG");
+	}
+
+	tempresult = src[0];
+
+	for (int i = 1; i < count; i++)
+	{
+		matKey a;
+		a = FindKeyPoint(tempresult, src[i]);
+
+		Mat T = L1_residual_min_sp3(a);
+		//Mat T = FindHomographyWithSVD_EigenDense(a);
+
+		tempresult = homography(T, src[i], tempresult, i);
+	}
+
+	result = tempresult;
+
+	waitKey(0);
+}
 
 void makePanorama1()
 {
@@ -1457,138 +2162,39 @@ void makePanorama1()
 
 	if (dodo == 0)
 	{
-		tempresult = src[0];
-
-		for (int i = 1; i < count; i++)
-		{
-			tempresult = matching2(tempresult, src[i], i);
-			//tempresult = matching(tempresult, src[i], i);
-		}
-
-		result = tempresult;
+		example0();
 	}
 	else if (dodo == 1)
 	{
-		tempresult = src[0];
-
-		for (int i = 1; i < count; i++)
-		{
-			tempresult = stitching2Pic(tempresult, src[i], i);
-		}
-
-		result = tempresult;
+		example1();
 	}
 	else if (dodo == 2)
 	{
-		matKey a, b, c;
-		
-		//for (int i = 1; i < count; i++)
-		//{
-		//	for (int j = 0; j < i; j++)
-		//	{
-		//		a = FindKeyPoint(src[i], src[j]);
-		//	}
-		//}
-		a = FindKeyPoint(src[0], src[1]);
-		b = FindKeyPoint(src[1], src[2]);
-		c = FindKeyPoint(src[2], src[0]);
-		int asize = a[0].size();
-		int bsize = b[0].size();
-		int csize = c[0].size();
-		vector<Point2f> tempmatch;
-		tempmatch.resize(asize);
-
-		int matchnum = 0;
-		vector<int> matchindex;
-		bool matching = false;
-
-		//0,1の結果に0,2の結果を追加した0,1,2を作る
-		matchindex.resize(csize);
-		for (int i = 0; i < asize; i++)
-		{
-			for (int j = 0; j < csize; j++)
-			{
-				if (a[0][i] == c[1][j])
-				{
-					tempmatch[i] = c[0][j];
-					matchnum++;
-					matchindex[j] = 1;
-				}
-			}
-		}
-		std::cout << matchnum << std::endl;
-		a.push_back(tempmatch);
-
-		for (int i = 0; i < csize; i++)
-		{
-			if (matchindex[i] == 0)
-			{
-				a[0].push_back(c[1][i]);
-				a[2].push_back(c[0][i]);
-			}
-		}
-		a[1].resize(a[0].size());
-
-
-		//1,2だけの結果を0,1,2に加える
-		asize = a[0].size();
-		matchindex.clear();
-		matching = false;
-		for (int i = 0; i < bsize; i++)
-		{
-			for (int j = 0; j < asize; j++)
-			{
-				if (b[0][i] == a[1][j])
-				{
-					matching = true;
-				}
-			}
-			if (!matching)
-			{
-				matchindex.push_back(i);
-			}
-			matching = false;
-		}
-		a[0].resize(asize + matchindex.size());
-		a[1].resize(asize + matchindex.size());
-		a[2].resize(asize + matchindex.size());
-
-		matchnum = 0;
-		for (int i = asize; i < a[0].size(); i++)
-		{
-			a[1][i] = b[0][matchindex[matchnum]];
-			a[2][i] = b[1][matchindex[matchnum]];
-			matchnum++;
-		}
-
-		Mat Homo = FindHomographyWithSVD_EigenSparse(a);
-
-		Mat result;
-
-		//result = homography(Homo,src[1],src[0],1);
-
-		waitKey();
+		example2();
 	}
 	else if (dodo == 5)
 	{
-
+		example5();
 	}
 	else if (dodo == 6)
 	{
 		matKey a;
 		a = FindKeyPoint(src[0], src[1]);
 
-		Mat Q, W, E, R;
-		Q = FindHomographyWithLS_CVDense(a);
+		Mat Q, W, E, R, T, Y, U;
 		W = FindHomographyWithSVD_CVDense(a);
 		E = FindHomographyWithSVD_EigenDense(a);
 		R = FindHomographyWithSVD_EigenSparse(a);
+		Q = FindHomographyWithLS_CVDense(a);
+		//T = L1_residual_min_sp(a);
+		//Y = L1_residual_min_sp2(a);
+		//U = L1_residual_min_sp3(a);
 
 		Mat homotest = cv::findHomography(a[1], a[0], CV_RANSAC);
 
 		std::cout << std::endl << "OpenCV_findHomography:" << std::endl << homotest << std::endl;
 
-		result = homography(Q, src[1], src[0], 0);
+		result = homography(T, src[1], src[0], 1);
 
 
 		waitKey(0);
@@ -1605,6 +2211,8 @@ void makePanorama1()
 		vector<Point2f> temp, temp2;
 		temp.resize(5);
 		temp2.resize(5);
+		//temp.resize(4);
+		//temp2.resize(4);
 
 		temp[0].x = 106;
 		temp[0].y = 108;
@@ -1634,11 +2242,17 @@ void makePanorama1()
 
 		nyu.push_back(temp2);
 
-		Mat Q, W, E, R;
-		Q = FindHomographyWithLS_CVDense(nyu);
+		Mat Q, W, E, R, T, Y, I, O;
 		W = FindHomographyWithSVD_CVDense(nyu);
 		E = FindHomographyWithSVD_EigenDense(nyu);
 		R = FindHomographyWithSVD_EigenSparse(nyu);
+		Q = FindHomographyWithLS_CVDense(nyu);
+		I = FindHomographyWithLS_CVDense2(nyu);
+
+
+		//T = L1_residual_min_sp(nyu);
+		//Y = L1_residual_min_sp2(nyu);
+		//O = L1_residual_min_sp3(nyu);
 
 		Mat homotest = cv::findHomography(nyu[1],nyu[0], CV_RANSAC);
 		std::cout << std::endl << "OpenCV_findHomography:" << std::endl << homotest << std::endl;

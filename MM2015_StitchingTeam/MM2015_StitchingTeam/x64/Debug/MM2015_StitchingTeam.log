@@ -1,36 +1,32 @@
-﻿2015/11/05 18:37:22 にビルドを開始しました。
+﻿2015/11/12 13:50:11 にビルドを開始しました。
      1>ノード 2 上のプロジェクト "C:\Users\修\Desktop\Stitching\MM2015_StitchingTeam\MM2015_StitchingTeam\MM2015_StitchingTeam.vcxproj" (Build ターゲット)。
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I"C:\Users\Ammae\eigen-eigen-c58038c56923" /I"C:\Users\Ammae\opencv-2.4.11\build\include" /Zi /nologo /W3 /WX- /sdl /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"x64\Debug\MM2015_StitchingTeam.pch" /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /errorReport:prompt MM2015_StitchingTeam.cpp
          MM2015_StitchingTeam.cpp
-     1>MM2015_StitchingTeam.cpp(103): warning C4244: 'return' : 'double' から 'int' への変換です。データが失われる可能性があります。
-     1>MM2015_StitchingTeam.cpp(110): warning C4244: 'return' : 'double' から 'int' への変換です。データが失われる可能性があります。
-     1>MM2015_StitchingTeam.cpp(211): warning C4244: '初期化中' : 'double' から 'int' への変換です。データが失われる可能性があります。
-     1>MM2015_StitchingTeam.cpp(213): warning C4244: '初期化中' : 'double' から 'int' への変換です。データが失われる可能性があります。
-     1>MM2015_StitchingTeam.cpp(509): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
-     1>MM2015_StitchingTeam.cpp(510): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
-     1>MM2015_StitchingTeam.cpp(511): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
-     1>MM2015_StitchingTeam.cpp(512): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
-     1>MM2015_StitchingTeam.cpp(669): warning C4244: '引数' : 'double' から 'int' への変換です。データが失われる可能性があります。
-     1>MM2015_StitchingTeam.cpp(685): warning C4244: '初期化中' : 'double' から 'int' への変換です。データが失われる可能性があります。
-     1>MM2015_StitchingTeam.cpp(686): warning C4244: '初期化中' : 'double' から 'int' への変換です。データが失われる可能性があります。
-     1>MM2015_StitchingTeam.cpp(1135): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
-     1>MM2015_StitchingTeam.cpp(1199): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
-     1>MM2015_StitchingTeam.cpp(1268): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
-     1>MM2015_StitchingTeam.cpp(1326): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
-     1>MM2015_StitchingTeam.cpp(1441): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
-     1>MM2015_StitchingTeam.cpp(1442): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
-     1>MM2015_StitchingTeam.cpp(1443): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
-     1>MM2015_StitchingTeam.cpp(1480): warning C4267: '=' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
-     1>MM2015_StitchingTeam.cpp(1511): warning C4267: '引数' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
-     1>MM2015_StitchingTeam.cpp(1616): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
-     1>MM2015_StitchingTeam.cpp(1618): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
-     1>MM2015_StitchingTeam.cpp(1619): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
-     1>MM2015_StitchingTeam.cpp(1621): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
-     1>MM2015_StitchingTeam.cpp(1791): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
-     1>MM2015_StitchingTeam.cpp(1793): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
-     1>MM2015_StitchingTeam.cpp(1794): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
-     1>MM2015_StitchingTeam.cpp(1796): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(22): warning C4005: '_SECURE_SCL' : マクロが再定義されました。
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\yvals.h(182) : '_SECURE_SCL' の前の定義を確認してください
+     1>MM2015_StitchingTeam.cpp(92): warning C4129: 'S' : エスケープ シーケンスとして正しく認識されませんでした。
+     1>MM2015_StitchingTeam.cpp(119): warning C4244: 'return' : 'double' から 'int' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(126): warning C4244: 'return' : 'double' から 'int' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(227): warning C4244: '初期化中' : 'double' から 'int' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(229): warning C4244: '初期化中' : 'double' から 'int' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(525): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(526): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(527): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(528): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(685): warning C4244: '引数' : 'double' から 'int' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(701): warning C4244: '初期化中' : 'double' から 'int' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(702): warning C4244: '初期化中' : 'double' から 'int' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(1151): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+     1>MM2015_StitchingTeam.cpp(1152): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+     1>MM2015_StitchingTeam.cpp(1246): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+     1>MM2015_StitchingTeam.cpp(1315): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+     1>MM2015_StitchingTeam.cpp(1373): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+     1>MM2015_StitchingTeam.cpp(1446): warning C4267: '初期化中' : 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+     1>MM2015_StitchingTeam.cpp(2214): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(2216): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(2217): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
+     1>MM2015_StitchingTeam.cpp(2219): warning C4244: '=' : 'int' から 'float' への変換です。データが失われる可能性があります。
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\修\Desktop\Stitching\MM2015_StitchingTeam\x64\Debug\MM2015_StitchingTeam.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\Ammae\opencv-2.4.11\build\x64\vc12\lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\修\Desktop\Stitching\MM2015_StitchingTeam\x64\Debug\MM2015_StitchingTeam.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\修\Desktop\Stitching\MM2015_StitchingTeam\x64\Debug\MM2015_StitchingTeam.lib" /MACHINE:X64 x64\Debug\MM2015_StitchingTeam.obj
          x64\Debug\stdafx.obj
@@ -39,4 +35,4 @@
 
 ビルドに成功しました。
 
-経過時間 00:00:08.73
+経過時間 00:00:08.17
